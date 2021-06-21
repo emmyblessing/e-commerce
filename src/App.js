@@ -1,7 +1,13 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import { commerce } from "./lib/commerce";
-import { Products, PrimarySearchAppBar}  from './components';
+import { Products, PrimarySearchAppBar, Cart}  from './components';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
+
 function App() {
   const [products, setProducts ] = useState([]);
   const [cart, setCart] = useState({});
@@ -26,13 +32,21 @@ function App() {
     fetchCart(); 
   }, []);
   
-  console.log(cart);
-
   return (
-    <div className="App">
-      <PrimarySearchAppBar />
-      <Products products={products} onAddToCart={handleAddToCart}/>
-    </div>
+    <Router>
+      <div>
+        <PrimarySearchAppBar totalItems={cart.total_items} />
+        <Switch>
+          <Route exact path="/">
+            <Products products={products} onAddToCart={handleAddToCart} />
+          </Route>
+          <Route exact path="/cart">
+            <Cart cart={cart} />
+          </Route>
+        </Switch>
+        
+      </div>
+    </Router>
   );
 }
 
